@@ -6,6 +6,6 @@ metadata:
 spec:
   name: tiledb_rest
   mariaDbRef:
-    name: tiledb
+    name: tile-mariadb
   characterSet: utf8
-  collate: utf8_general_ci0
+  collate: utf8_general_ci

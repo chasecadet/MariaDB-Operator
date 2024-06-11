@@ -1,17 +1,21 @@
 apiVersion: k8s.mariadb.com/v1alpha1
 kind: Grant
 metadata:
-  name: grant
+  name: tiledb
   namespace: tiledb-cloud
 spec:
   mariaDbRef:
-    name: tiledb
+    name: tile-mariadb
   privileges:
     - "SELECT"
     - "INSERT"
     - "UPDATE"
+    - "CREATE"
+    - "INDEX"
+    - "ALTER"
+    - "DELETE"
     # - "ALL PRIVILEGES"
-  database: "tiledb"
+  database: "tiledb_rest"
   table: "*"
   username: tiledb
   grantOption: true
