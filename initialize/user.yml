@@ -1,14 +1,15 @@
 apiVersion: k8s.mariadb.com/v1alpha1
 kind: User
 metadata:
-  name: user
+  name: tiledb
+  namespace: tiledb-cloud
 spec:
   # If you want the user to be created with a different name than the resource name
   # name: user-custom
   mariaDbRef:
-    name: mariadb
+    name: tiledb
   passwordSecretKeyRef:
-    name: mariadb
+    name: tiledb
     key: password
   # This field is immutable and defaults to 10
   maxUserConnections: 20

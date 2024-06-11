@@ -2,17 +2,18 @@ apiVersion: k8s.mariadb.com/v1alpha1
 kind: Grant
 metadata:
   name: grant
+  namespace: tiledb-cloud
 spec:
   mariaDbRef:
-    name: mariadb
+    name: tiledb
   privileges:
     - "SELECT"
     - "INSERT"
     - "UPDATE"
     # - "ALL PRIVILEGES"
-  database: "*"
+  database: "tiledb"
   table: "*"
-  username: user
+  username: tiledb
   grantOption: true
   host: "%"
   requeueInterval: 30s

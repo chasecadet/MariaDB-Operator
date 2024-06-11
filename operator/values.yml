@@ -1,0 +1,6 @@
+image:
+  repository: ghcr.io/mariadb-operator/mariadb-operator
+  pullPolicy: IfNotPresent
+logLevel: INFO
+ha:
+  enabled: truee

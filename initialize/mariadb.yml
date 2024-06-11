@@ -1,0 +1,101 @@
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: MariaDB
+metadata:
+  name: tiledb
+  namespace: tiledb-cloud
+spec:
+  affinity:
+    antiAffinityEnabled: true
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchExpressions:
+          - key: app.kubernetes.io/instance
+            operator: In
+            values:
+            - mariadb
+        topologyKey: kubernetes.io/hostname
+  database: tiledb
+  galera:
+    agent:
+      gracefulShutdownTimeout: 1s
+      imagePullPolicy: IfNotPresent
+      kubernetesAuth:
+        enabled: true
+      port: 5555
+    availableWhenDonor: false
+    config:
+      reuseStorageVolume: false
+      volumeClaimTemplate:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 5Gi
+    enabled: true
+    galeraLibPath: /usr/lib/galera/libgalera_smm.so
+    primary:
+      automaticFailover: true
+      podIndex: 0
+    recovery:
+      clusterBootstrapTimeout: 10m0s
+      clusterHealthyTimeout: 30s
+      clusterMonitorInterval: 10s
+      enabled: true
+      minClusterSize: 50%
+      podRecoveryTimeout: 3m0s
+      podSyncTimeout: 3m0s
+    replicaThreads: 1
+    sst: mariabackup
+  imagePullPolicy: IfNotPresent
+  podSecurityContext:
+    runAsUser: 0
+  metrics:
+    enabled: true
+    exporter:
+      port: 9104
+    passwordSecretKeyRef:
+      generate: true
+      key: password
+      name: mariadb-metrics-password
+    serviceMonitor: {}
+    username: mariadb-metrics
+  myCnf: |
+    [mariadb]
+    bind-address=*
+    default_storage_engine=InnoDB
+    binlog_format=row
+    innodb_autoinc_lock_mode=2
+    max_allowed_packet=256M
+  myCnfConfigMapKeyRef:
+    key: my.cnf
+    name: mariadb-config
+  passwordSecretKeyRef:
+    generate: false
+    key: password
+    name: tiledb
+  podDisruptionBudget:
+    maxUnavailable: 33%
+  port: 3306
+  replicas: 3
+  rootEmptyPassword: false
+  rootPasswordSecretKeyRef:
+    generate: false
+    key: root-password
+    name: tiledb
+  service:
+    type: ClusterIP
+  serviceAccountName: mariadb
+  storage:
+    ephemeral: false
+    resizeInUseVolumes: true
+    size: 50Gi
+    volumeClaimTemplate:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 50Gi
+    waitForVolumeResize: true
+  username: tiledb
+
